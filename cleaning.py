@@ -41,3 +41,21 @@ def json_to_df(file):
     df["comments_disabled"] = df["comments_disabled"].map(lambda x: None if math.isnan(x) is True else x)
     df["video_view_count"] = df["video_view_count"].map(lambda x: x if type(x)==float else None)
     return df
+
+def save_csv(df, to_path, focus_only=False):
+    if focus_only == False:
+        return df.to_csv(to_path,encoding="utf_8_sig",index=False)
+    elif focus_only == True:
+        df = df[["edge_liked_by","edge_media_to_comment","taken_at_timestamp"]]
+        df["utcdate"] = pd.to_datetime(df["taken_at_timestamp"].values, utc=True,unit='s').to_period("D")
+        x = df.set_index("utcdate").drop(columns="taken_at_timestamp").values #returns a numpy array
+        min_max_scaler = preprocessing.MinMaxScaler()
+        x_scaled = min_max_scaler.fit_transform(x)
+        df[["nd_like","nd_comment"]] = pd.DataFrame(x_scaled)
+        return df.to_csv(to_path,index=False)
+    
+def get_names(ls):#Please use your personal name list, this is only an example
+    name_list = []
+    for n in ls:
+        name_list.append(n.split("/")[-2])
+    return name_list
