@@ -59,3 +59,19 @@ def get_names(ls):#Please use your personal name list, this is only an example
     for n in ls:
         name_list.append(n.split("/")[-2])
     return name_list
+
+#focus_only
+def process_js_csv(name):
+    source = "./data/"+name+".json"
+    dest = "./data/csv/"+name+"_focus"+".csv"
+    try:
+        save_csv(json_to_df(source),dest,focus_only=True)
+    except:
+        print("Failed in {}".format(name))
+
+if __name__ == "__main__":
+    ls = ['gs://examplebucket/hashtag1/']#use your own names list to deal with
+    save_pool = ThreadPool()
+    save_pool.map(process_js_csv, get_names(ls))
+    save_pool.close()
+    save_pool.join()
