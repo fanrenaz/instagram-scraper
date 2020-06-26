@@ -167,6 +167,7 @@ class InstagramScraper(object):
             answer = answer[0].upper()
             if answer == 'I':
                 self.logger.info( 'The user has chosen to ignore {0}'.format(url) )
+                self.save_json({ 'GraphImages': self.posts }, '{0}/{1}.json'.format(dst, value))
                 return False
             elif answer == 'R':
                 return True
@@ -177,6 +178,7 @@ class InstagramScraper(object):
                 return True
             else:
                 self.logger.info( 'The user has chosen to abort' )
+                self.save_json({ 'GraphImages': self.posts }, '{0}/{1}.json'.format(dst, value))
                 return None
 
     def safe_get(self, *args, **kwargs):
@@ -468,23 +470,7 @@ class InstagramScraper(object):
                 for item in tqdm.tqdm(media_generator(value), desc='Searching {0} for posts'.format(value), unit=" media",
                                       disable=self.quiet):
 
-                    if self.filter_locations:
-                        if item.get("location") is None or item.get("location").get("id") not in self.filter_locations:
-                            continue
-                    if ((item['is_video'] is False and 'image' in self.media_types) or \
-                                (item['is_video'] is True and 'video' in self.media_types)
-                        ) and self.is_new_media(item):
-                        future = executor.submit(self.worker_wrapper, self.download, item, dst)
-                        future_to_item[future] = item
-
-                    if self.include_location and 'location' not in item:
-                        media_exec.submit(self.worker_wrapper, self.__get_location, item)
-
-                    if self.comments:
-                        item['edge_media_to_comment']['data'] = list(self.query_comments_gen(item['shortcode']))
-
-                    if self.media_metadata or self.comments or self.include_location:
-                        self.posts.append(item)
+                    self.posts.append(item)
 
                     iter = iter + 1
                     if self.maximum != 0 and iter >= self.maximum:
@@ -1444,6 +1430,7 @@ def main():
                 return
 
     if args.tag:
+        scraper.session.headers.update({'Referer': "https://www.instagram.com/explore/tags/{}".format(vars(args)["username"])})
         scraper.scrape_hashtag()
     elif args.location:
         scraper.scrape_location()
