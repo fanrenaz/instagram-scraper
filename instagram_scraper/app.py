@@ -473,6 +473,10 @@ class InstagramScraper(object):
                     self.posts.append(item)
 
                     iter = iter + 1
+                    time.sleep(SLEEP_TIME+random.random())
+
+                    if iter % 10 == 0:
+                        time.sleep(5*SLEEP_TIME+random.random())
                     if self.maximum != 0 and iter >= self.maximum:
                         break
 
