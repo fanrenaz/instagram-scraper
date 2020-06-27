@@ -162,24 +162,26 @@ class InstagramScraper(object):
         time.sleep(secs % min_delay)
 
     def _retry_prompt(self, url, exception_message):
-        global SLEEP_TIME
         """Show prompt and return True: retry, False: ignore, None: abort"""
         answer = input( 'Repeated error {0}\n(A)bort, (I)gnore, (R)etry or retry (F)orever?'.format(exception_message) )
         if answer:
             answer = answer[0].upper()
-            if answer == 'I':
+            if answer == 'I' or "R":
+                global SLEEP_TIME
                 SLEEP_TIME += 0.5
-                if self.proxies and type(self.proxies) == str:
-                    self.session.proxies = json.loads(input("Tell a new proxy. "))
-                self.authenticate_with_login()
-                self.logger.info( 'The user has chosen to ignore {0}'.format(url) )
-                return False
-            elif answer == 'R':
-                SLEEP_TIME += 0.5
-                if self.proxies and type(self.proxies) == str:
-                    self.session.proxies = json.loads(input("Tell a new proxy. "))
-                self.authenticate_with_login()
-                return True
+                change = input("change user and proxy?y/[n] ")
+                if change == "y"
+                    if self.proxies and type(self.proxies) == str:
+                        self.session.proxies = json.loads(input("Tell a new proxy. "))
+                    self.login_user = input("new username")
+                    self.login_pass = input("new password")
+                    self.authenticate_with_login()
+                else: pass
+                if answer == "I":
+                    self.logger.info( 'The user has chosen to ignore {0}'.format(url) )
+                    return False
+                else:
+                    return True
             elif answer == 'F':
                 self.logger.info( 'The user has chosen to retry forever' )
                 global MAX_RETRIES
