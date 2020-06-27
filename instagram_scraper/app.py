@@ -162,12 +162,12 @@ class InstagramScraper(object):
         time.sleep(secs % min_delay)
 
     def _retry_prompt(self, url, exception_message):
+        global SLEEP_TIME
         """Show prompt and return True: retry, False: ignore, None: abort"""
         answer = input( 'Repeated error {0}\n(A)bort, (I)gnore, (R)etry or retry (F)orever?'.format(exception_message) )
         if answer:
             answer = answer[0].upper()
             if answer == 'I':
-                global SLEEP_TIME
                 SLEEP_TIME += 0.5
                 if self.proxies and type(self.proxies) == str:
                     self.session.proxies = json.loads(input("Tell a new proxy. "))
@@ -175,7 +175,6 @@ class InstagramScraper(object):
                 self.logger.info( 'The user has chosen to ignore {0}'.format(url) )
                 return False
             elif answer == 'R':
-                global SLEEP_TIME
                 SLEEP_TIME += 0.5
                 if self.proxies and type(self.proxies) == str:
                     self.session.proxies = json.loads(input("Tell a new proxy. "))
