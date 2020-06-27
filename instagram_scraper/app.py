@@ -167,11 +167,19 @@ class InstagramScraper(object):
         if answer:
             answer = answer[0].upper()
             if answer == 'I':
+                global SLEEP_TIME
                 SLEEP_TIME += 0.5
+                if self.proxies and type(self.proxies) == str:
+                    self.session.proxies = json.loads(input("Tell a new proxy. "))
+                self.authenticate_with_login()
                 self.logger.info( 'The user has chosen to ignore {0}'.format(url) )
                 return False
             elif answer == 'R':
+                global SLEEP_TIME
                 SLEEP_TIME += 0.5
+                if self.proxies and type(self.proxies) == str:
+                    self.session.proxies = json.loads(input("Tell a new proxy. "))
+                self.authenticate_with_login()
                 return True
             elif answer == 'F':
                 self.logger.info( 'The user has chosen to retry forever' )
