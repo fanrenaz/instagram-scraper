@@ -169,7 +169,6 @@ class InstagramScraper(object):
             if answer == 'I':
                 SLEEP_TIME += 0.5
                 self.logger.info( 'The user has chosen to ignore {0}'.format(url) )
-                self.save_json({ 'GraphImages': self.posts }, '{0}/{1}.json'.format(self.get_dst_dir(self.username), self.username))
                 return False
             elif answer == 'R':
                 SLEEP_TIME += 0.5
@@ -181,7 +180,6 @@ class InstagramScraper(object):
                 return True
             else:
                 self.logger.info( 'The user has chosen to abort' )
-                self.save_json({ 'GraphImages': self.posts }, '{0}/{1}.json'.format(self.get_dst_dir(self.username), self.username))
                 return None
 
     def safe_get(self, *args, **kwargs):
