@@ -167,7 +167,7 @@ class InstagramScraper(object):
             answer = answer[0].upper()
             if answer == 'I':
                 self.logger.info( 'The user has chosen to ignore {0}'.format(url) )
-                self.save_json({ 'GraphImages': self.posts }, '{0}/{1}.json'.format(dst, value))
+                self.save_json({ 'GraphImages': self.posts }, '{0}/{1}.json'.format(self.get_dst_dir(self.username), self.username))
                 return False
             elif answer == 'R':
                 return True
@@ -178,7 +178,7 @@ class InstagramScraper(object):
                 return True
             else:
                 self.logger.info( 'The user has chosen to abort' )
-                self.save_json({ 'GraphImages': self.posts }, '{0}/{1}.json'.format(dst, value))
+                self.save_json({ 'GraphImages': self.posts }, '{0}/{1}.json'.format(self.get_dst_dir(self.username), self.username))
                 return None
 
     def safe_get(self, *args, **kwargs):
