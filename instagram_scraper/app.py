@@ -170,7 +170,7 @@ class InstagramScraper(object):
                 global SLEEP_TIME
                 SLEEP_TIME += 0.5
                 change = input("change user and proxy?y/[n] ")
-                if change == "y"
+                if change == "y":
                     if self.proxies and type(self.proxies) == str:
                         self.session.proxies = json.loads(input("Tell a new proxy. "))
                     self.login_user = input("new username")
