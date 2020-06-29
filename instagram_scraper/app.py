@@ -172,11 +172,15 @@ class InstagramScraper(object):
                 change = input("change user and proxy?y/[n] ")
                 if change == "y":
                     if self.proxies and type(self.proxies) == str:
+                        print("current proxy is: {}".format(self.session.proxies))
                         self.session.proxies = json.loads(input("Tell a new proxy. "))
-                    self.login_user = input("new username")
-                    self.login_pass = input("new password")
-                    self.authenticate_with_login()
-                else: pass
+                    if args.login_user and args.login_pass:
+                        print("current user is: {}".format(self.login_user))
+                        self.login_user = input("new username")
+                        self.login_pass = input("new password")
+                        scraper.authenticate_with_login()
+                    else:
+                        scraper.authenticate_as_guest()
                 if answer == "I":
                     self.logger.info( 'The user has chosen to ignore {0}'.format(url) )
                     return False
